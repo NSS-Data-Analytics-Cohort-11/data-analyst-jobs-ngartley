@@ -98,7 +98,7 @@ WHERE title ILIKE '%Analyst%'
 
 -- Answer: 774
 
--- Question 12: How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
+-- Question 12 - How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
 
 SELECT DISTINCT (title)
 FROM data_analyst_jobs
@@ -106,3 +106,36 @@ WHERE title NOT ILIKE '%Analyst%'
 	AND title NOT ILIKE '%Analytics%'
 	
 -- Answer: 4. Tableau is the common word used. 
+
+-- Bonus Questions
+	-- A. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks. Disregard any postings where the domain is NULL.
+	
+SELECT domain AS hard_to_fill
+FROM data_analyst_jobs
+WHERE domain IS NOT NULL
+AND skill ILIKE '%SQL%'
+AND days_since_posting>21
+GROUP BY domain
+
+-- Bonus Questions
+	-- B. Order your results so that the domain with the greatest number of hard to fill jobs is at the top.
+	
+SELECT domain AS hard_to_fill, COUNT(domain)
+FROM data_analyst_jobs
+WHERE domain IS NOT NULL
+AND skill ILIKE '%SQL%'
+AND days_since_posting>21
+GROUP BY domain, days_since_posting
+ORDER BY count DESC
+
+-- Bonus Questions
+	-- C. Which three industries are in the top 4 on this list? How many jobs have been listed for more than 3 weeks for each of the top 4?
+
+SELECT domain AS hard_to_fill, COUNT(domain)
+FROM data_analyst_jobs
+WHERE domain IS NOT NULL
+AND skill ILIKE '%SQL%'
+AND days_since_posting>21
+GROUP BY domain, days_since_posting
+ORDER BY count DESC
+LIMIT 4;
