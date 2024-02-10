@@ -1,6 +1,6 @@
 -- Question 1 - How many rows are in the data_analyst_jobs table?
 
-SELECT *
+SELECT COUNT(*)
 FROM data_analyst_jobs
 
 -- Answer: 1793
@@ -33,10 +33,10 @@ WHERE location IN ('TN', 'KY')
 
 SELECT COUNT (star_rating)
 FROM data_analyst_jobs
-WHERE star_rating >=4
-AND location IN ('TN', 'KY')
+WHERE star_rating >4
+AND location IN ('TN')
 
--- Answer: 4
+-- Answer: 3
 
 -- Question 5 - How many postings in the dataset have a review count between 500 and 1000?
 
@@ -64,35 +64,36 @@ FROM data_analyst_jobs
 
 -- Question 8 - How many unique job titles are there for California companies?
 
-SELECT COUNT (DISTINCT title), location
+SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
 WHERE location = 'CA'
-GROUP BY location
 
 -- Answer: 230
 
 -- Question 9 - Find the name of each company and its average star rating for all companies that have more than 5000 reviews across all locations. How many companies are there with more that 5000 reviews across all locations?
 
-SELECT company, AVG(star_rating) AS avg_star_rating
+SELECT DISTINCT company, AVG(star_rating) AS avg_star_rating
 FROM data_analyst_jobs
 WHERE review_count>5000
+	AND company IS NOT NULL
 GROUP BY company
 
--- Answer: 40 named companies and one null
+-- Answer: 40 named companies
 
 -- Question 10 - Add the code to order the query in #9 from highest to lowest average star rating. Which company with more than 5000 reviews across all locations in the dataset has the highest star rating? What is that rating?
 
-SELECT company, ROUND (AVG(star_rating),1) AS avg_star_rating
+SELECT DISTINCT company, AVG(star_rating) AS avg_star_rating
 FROM data_analyst_jobs
 WHERE review_count>5000
+	AND company IS NOT NULL
 GROUP BY company
 ORDER BY avg_star_rating DESC
 
--- Answer: There are 6 companies that have the top average star rating. Those six companies are General Motors, Unilever, Microsoft, Nike, American Express, and Kaiser Permanente. That average when rounded down is 4.2 stars.
+-- Answer: There are 6 companies that have the top average star rating. Those six companies are General Motors, Unilever, Microsoft, Nike, American Express, and Kaiser Permanente.
 
 -- Question 11 - Find all the job titles that contain the word ‘Analyst’. How many different job titles are there?
 
-SELECT DISTINCT (title)
+SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
 WHERE title ILIKE '%Analyst%'
 
@@ -131,7 +132,7 @@ ORDER BY count DESC
 -- Bonus Questions
 	-- C. Which three industries are in the top 4 on this list? How many jobs have been listed for more than 3 weeks for each of the top 4?
 
-SELECT domain AS hard_to_fill, COUNT(domain)
+SELECT domain AS hard_to_fill, COUNT(title)
 FROM data_analyst_jobs
 WHERE domain IS NOT NULL
 AND skill ILIKE '%SQL%'
